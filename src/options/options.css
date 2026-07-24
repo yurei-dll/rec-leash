@@ -1,0 +1,110 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: Canvas;
+  color: CanvasText;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  width: min(760px, calc(100vw - 32px));
+  margin: 32px auto;
+}
+
+header,
+section {
+  border-bottom: 1px solid color-mix(in srgb, CanvasText 18%, transparent);
+  padding: 20px 0;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+}
+
+header p,
+#last-recorded,
+#status {
+  margin-top: 8px;
+  color: color-mix(in srgb, CanvasText 72%, transparent);
+}
+
+label {
+  display: block;
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+
+select,
+button,
+.file-button {
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, CanvasText 28%, transparent);
+  border-radius: 6px;
+  padding: 0 12px;
+  background: Canvas;
+  color: CanvasText;
+  font: inherit;
+}
+
+button,
+.file-button {
+  cursor: pointer;
+}
+
+.file-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.file-button input {
+  display: none;
+}
+
+.danger {
+  border-color: #b3261e;
+  color: #b3261e;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+dl div {
+  border: 1px solid color-mix(in srgb, CanvasText 18%, transparent);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+dt {
+  color: color-mix(in srgb, CanvasText 68%, transparent);
+  font-size: 0.85rem;
+}
+
+dd {
+  margin: 4px 0 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

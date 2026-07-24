@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recommendation Leash</title>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Recommendation Leash</h1>
+        <p>Local YouTube watch-history matching for repeated recommendations.</p>
+      </header>
+
+      <section aria-labelledby="mode-heading">
+        <h2 id="mode-heading">Recommendation Cards</h2>
+        <label for="display-mode">Display mode</label>
+        <select id="display-mode">
+          <option value="badge">Badge only</option>
+          <option value="dim">Badge and dim</option>
+          <option value="hide">Hide watched cards</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </section>
+
+      <section aria-labelledby="diagnostics-heading">
+        <h2 id="diagnostics-heading">Diagnostics</h2>
+        <dl>
+          <div><dt>Watched records</dt><dd id="record-count">0</dd></div>
+          <div><dt>Cards scanned</dt><dd id="cards-scanned">0</dd></div>
+          <div><dt>Cards matched</dt><dd id="cards-matched">0</dd></div>
+          <div><dt>Cards modified</dt><dd id="cards-modified">0</dd></div>
+        </dl>
+        <p id="last-recorded">No videos recorded yet.</p>
+      </section>
+
+      <section aria-labelledby="data-heading">
+        <h2 id="data-heading">Local Data</h2>
+        <div class="actions">
+          <button id="export-history" type="button">Export JSON</button>
+          <label class="file-button">
+            Import JSON
+            <input id="import-history" type="file" accept="application/json,.json" />
+          </label>
+          <button id="clear-history" class="danger" type="button">Clear history</button>
+        </div>
+        <p id="status" role="status"></p>
+      </section>
+    </main>
+
+    <script type="module" src="./options.js"></script>
+  </body>
+</html>

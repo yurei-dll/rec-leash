@@ -1,0 +1,25 @@
+.recommendation-leash-badge {
+  position: absolute;
+  z-index: 10;
+  top: 6px;
+  left: 6px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  background: #101418;
+  color: #ffffff;
+  font: 700 11px/1.2 Arial, sans-serif;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+[data-recommendation-leash-state] {
+  position: relative;
+}
+
+.recommendation-leash-dim {
+  opacity: 0.45;
+}
+
+.recommendation-leash-hide {
+  display: none !important;
+}
