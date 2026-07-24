@@ -1,24 +1,36 @@
 import { RecommendationCardFilter } from "./card-filter";
 import { YouTubeWatchObserver } from "./watch-observer";
 import { IndexedDbHistoryStore } from "../shared/history-store";
-import { getSettings, normalizeSettings } from "../shared/settings";
+import { Logger } from "../shared/logger";
+import { getSettings, normalizeSettings, SETTINGS_KEY } from "../shared/settings";
 
 async function main(): Promise<void> {
   const store = new IndexedDbHistoryStore();
   const settings = await getSettings();
-  const watchObserver = new YouTubeWatchObserver(store);
-  const cardFilter = new RecommendationCardFilter(store, settings);
+  const logger = new Logger(settings.debugLogging);
+  const watchObserver = new YouTubeWatchObserver(store, logger);
+  const cardFilter = new RecommendationCardFilter(store, settings, undefined, logger);
 
+  logger.info("content script loaded", {
+    href: window.location.href,
+    displayMode: settings.displayMode,
+    debugLogging: settings.debugLogging
+  });
   watchObserver.start();
   cardFilter.start();
 
   browser.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName !== "local" || !changes.recommendationLeashSettings) {
+    if (areaName !== "local" || !changes[SETTINGS_KEY]) {
       return;
     }
 
-    cardFilter.setDisplayMode(normalizeSettings(changes.recommendationLeashSettings.newValue).displayMode);
+    const nextSettings = normalizeSettings(changes[SETTINGS_KEY].newValue);
+    logger.setEnabled(nextSettings.debugLogging);
+    logger.info("settings changed", nextSettings);
+    cardFilter.setDisplayMode(nextSettings.displayMode);
   });
 }
 
-void main();
+void main().catch((error: unknown) => {
+  console.error("[Recommendation Leash] content script failed to start", error);
+});

@@ -9,6 +9,7 @@ const importer = new JsonHistoryImporter();
 
 const elements = {
   displayMode: document.querySelector<HTMLSelectElement>("#display-mode"),
+  debugLogging: document.querySelector<HTMLInputElement>("#debug-logging"),
   recordCount: document.querySelector<HTMLElement>("#record-count"),
   cardsScanned: document.querySelector<HTMLElement>("#cards-scanned"),
   cardsMatched: document.querySelector<HTMLElement>("#cards-matched"),
@@ -25,11 +26,24 @@ void init();
 async function init(): Promise<void> {
   const settings = await getSettings();
   required(elements.displayMode).value = settings.displayMode;
+  required(elements.debugLogging).checked = settings.debugLogging;
   await refresh();
 
   required(elements.displayMode).addEventListener("change", () => {
-    void saveSettings({ displayMode: required(elements.displayMode).value as DisplayMode }).then(() => {
+    void saveSettings({
+      displayMode: required(elements.displayMode).value as DisplayMode,
+      debugLogging: required(elements.debugLogging).checked
+    }).then(() => {
       setStatus("Display mode saved.");
+    });
+  });
+
+  required(elements.debugLogging).addEventListener("change", () => {
+    void saveSettings({
+      displayMode: required(elements.displayMode).value as DisplayMode,
+      debugLogging: required(elements.debugLogging).checked
+    }).then(() => {
+      setStatus(`Verbose logging ${required(elements.debugLogging).checked ? "enabled" : "disabled"}.`);
     });
   });
 

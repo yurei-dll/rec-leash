@@ -14,6 +14,7 @@ export type DisplayMode = "badge" | "dim" | "hide" | "disabled";
 
 export interface ExtensionSettings {
   displayMode: DisplayMode;
+  debugLogging: boolean;
 }
 
 export interface PageDiagnostics {

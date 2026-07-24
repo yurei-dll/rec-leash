@@ -22,6 +22,7 @@ Open the extension options page from Firefox's add-ons manager.
 - **Badge and dim**: badge matched cards and reduce their opacity.
 - **Hide watched cards**: remove matched cards from view.
 - **Disabled**: restore cards and stop applying visual changes.
+- **Verbose console logging**: enabled by default for the MVP. Open the YouTube tab's developer console and filter for `Recommendation Leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
 
 The options page also shows:
 

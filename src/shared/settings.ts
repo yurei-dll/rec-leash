@@ -1,10 +1,11 @@
 import { getBrowserApi, type WebExtensionApi } from "./browser-api";
 import type { DisplayMode, ExtensionSettings } from "./types";
 
-const SETTINGS_KEY = "recommendationLeashSettings";
+export const SETTINGS_KEY = "recommendationLeashSettings";
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
-  displayMode: "badge"
+  displayMode: "badge",
+  debugLogging: true
 };
 
 const DISPLAY_MODES = new Set<DisplayMode>(["badge", "dim", "hide", "disabled"]);
@@ -29,7 +30,9 @@ export function normalizeSettings(value: unknown): ExtensionSettings {
   }
 
   const mode = (value as Partial<ExtensionSettings>).displayMode;
+  const debugLogging = (value as Partial<ExtensionSettings>).debugLogging;
   return {
-    displayMode: DISPLAY_MODES.has(mode as DisplayMode) ? (mode as DisplayMode) : DEFAULT_SETTINGS.displayMode
+    displayMode: DISPLAY_MODES.has(mode as DisplayMode) ? (mode as DisplayMode) : DEFAULT_SETTINGS.displayMode,
+    debugLogging: typeof debugLogging === "boolean" ? debugLogging : DEFAULT_SETTINGS.debugLogging
   };
 }

@@ -13,13 +13,13 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
-      "js": ["content/index.js"],
-      "css": ["content/content.css"],
+      "js": ["dist/content/index.js"],
+      "css": ["dist/content/content.css"],
       "run_at": "document_idle"
     }
   ],
   "options_ui": {
-    "page": "options/options.html",
+    "page": "src/options/options.html",
     "open_in_tab": true
   }
 }
