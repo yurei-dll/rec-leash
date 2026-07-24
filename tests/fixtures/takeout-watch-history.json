@@ -1,0 +1,10 @@
+[
+  {
+    "header": "YouTube",
+    "title": "Watched A Useful Video",
+    "titleUrl": "https://www.youtube.com/watch?v=abc_DEF-123",
+    "subtitles": [{ "name": "Useful Channel" }],
+    "time": "2026-01-01T00:00:00.000Z",
+    "products": ["YouTube"]
+  }
+]
