@@ -22,6 +22,7 @@ Open the extension options page from Firefox's add-ons manager.
 - **Badge and dim**: badge matched cards and reduce their opacity.
 - **Hide watched cards**: remove matched cards from view.
 - **Disabled**: restore cards and stop applying visual changes.
+- **Watch-status source**: default to the extension's 30-second actual-playback history, or also treat a card with YouTube's red resume-progress bar as watched. The latter is deliberately broad and can hide nearly every previously started video.
 - **Verbose console logging**: enabled by default for the MVP. Open the YouTube tab's developer console and filter for `Recommendation Leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
 
 The options page also shows:
@@ -43,7 +44,7 @@ Requested permissions are deliberately small:
 
 ## How Recording Works
 
-The content script watches normal YouTube `/watch?v=...` URLs, including SPA navigation events and URL changes. It records a video only after about 30 seconds of actual playback time from the page's `<video>` element. Merely rendering links, thumbnails, previews, or recommendation cards does not create a watched record.
+The content script watches normal YouTube `/watch?v=...` URLs, including SPA navigation events and URL changes. It records a video only after about 30 seconds of actual playback time from the page's `<video>` element. Merely rendering links, thumbnails, previews, or recommendation cards does not create a watched record. Optionally, card treatment can also use YouTube's visible red resume-progress overlay without adding that video to local history. This recognizes both the older overlay and YouTube's newer progress-segment markup, including full (100%) bars, while ignoring zero-width segments.
 
 Each watched record stores:
 

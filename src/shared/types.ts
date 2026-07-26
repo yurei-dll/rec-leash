@@ -11,9 +11,11 @@ export interface WatchedVideoRecord {
 }
 
 export type DisplayMode = "badge" | "dim" | "hide" | "disabled";
+export type WatchStatusSource = "playtime" | "playtime-or-card-progress";
 
 export interface ExtensionSettings {
   displayMode: DisplayMode;
+  watchStatusSource: WatchStatusSource;
   debugLogging: boolean;
 }
 

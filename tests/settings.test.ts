@@ -4,7 +4,15 @@ import { normalizeSettings } from "../src/shared/settings";
 describe("settings", () => {
   it("defaults to visible diagnostic badge mode", () => {
     expect(normalizeSettings({}).displayMode).toBe("badge");
+    expect(normalizeSettings({}).watchStatusSource).toBe("playtime");
     expect(normalizeSettings({}).debugLogging).toBe(true);
+  });
+
+  it("normalizes watch-status sources", () => {
+    expect(normalizeSettings({ watchStatusSource: "playtime-or-card-progress" }).watchStatusSource).toBe(
+      "playtime-or-card-progress"
+    );
+    expect(normalizeSettings({ watchStatusSource: "unknown" }).watchStatusSource).toBe("playtime");
   });
 
   it("accepts supported modes and rejects unknown modes", () => {

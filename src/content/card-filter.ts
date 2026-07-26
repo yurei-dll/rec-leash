@@ -1,7 +1,7 @@
 import { savePageDiagnostics } from "../shared/diagnostics";
 import type { HistoryStore } from "../shared/history-store";
 import type { Logger } from "../shared/logger";
-import type { DisplayMode, PageDiagnostics } from "../shared/types";
+import type { DisplayMode, PageDiagnostics, WatchStatusSource } from "../shared/types";
 import { YouTubeCardAdapter, type CandidateCard } from "./card-adapter";
 
 const BADGE_CLASS = "recommendation-leash-badge";
@@ -11,7 +11,7 @@ export class RecommendationCardFilter {
   #store: HistoryStore;
   #adapter: YouTubeCardAdapter;
   #logger: Logger | undefined;
-  #settings: { displayMode: DisplayMode };
+  #settings: { displayMode: DisplayMode; watchStatusSource: WatchStatusSource };
   #pendingRoots = new Set<ParentNode>();
   #timer: number | undefined;
   #observer?: MutationObserver;
@@ -23,12 +23,12 @@ export class RecommendationCardFilter {
 
   constructor(
     store: HistoryStore,
-    settings: { displayMode: DisplayMode },
+    settings: { displayMode: DisplayMode; watchStatusSource?: WatchStatusSource },
     adapter = new YouTubeCardAdapter(),
     logger?: Logger
   ) {
     this.#store = store;
-    this.#settings = settings;
+    this.#settings = { displayMode: settings.displayMode, watchStatusSource: settings.watchStatusSource ?? "playtime" };
     this.#adapter = adapter;
     this.#logger = logger;
   }
@@ -64,6 +64,12 @@ export class RecommendationCardFilter {
     this.#logger?.info("display mode changed", { displayMode });
     this.#settings.displayMode = displayMode;
     this.applyModeToExistingCards();
+  }
+
+  setWatchStatusSource(watchStatusSource: WatchStatusSource): void {
+    this.#logger?.info("watch status source changed", { watchStatusSource });
+    this.#settings.watchStatusSource = watchStatusSource;
+    this.enqueue(document.body);
   }
 
   enqueue(root: ParentNode): void {
@@ -115,11 +121,12 @@ export class RecommendationCardFilter {
 
   async #processCard(card: CandidateCard): Promise<void> {
     this.diagnostics.cardsScanned += 1;
-    const watched = await this.#containsWatchedVideo(card.videoIds);
+    const watched = await this.#isWatched(card);
     card.element.dataset.recommendationLeashWatched = String(watched);
     this.#logger?.debug("card scanned", {
       videoIds: card.videoIds,
       watched,
+      watchStatusSource: this.#settings.watchStatusSource,
       displayMode: this.#settings.displayMode
     });
 
@@ -138,8 +145,15 @@ export class RecommendationCardFilter {
     }
   }
 
-  async #containsWatchedVideo(videoIds: string[]): Promise<boolean> {
-    for (const videoId of videoIds) {
+  async #isWatched(card: CandidateCard): Promise<boolean> {
+    if (
+      this.#settings.watchStatusSource === "playtime-or-card-progress" &&
+      this.#adapter.hasWatchProgressBar(card.element)
+    ) {
+      return true;
+    }
+
+    for (const videoId of card.videoIds) {
       if (await this.#store.has(videoId)) {
         return true;
       }

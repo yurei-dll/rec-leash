@@ -2,13 +2,14 @@ import { getStoredDiagnostics } from "../shared/diagnostics";
 import { IndexedDbHistoryStore } from "../shared/history-store";
 import { JsonHistoryImporter, stringifyHistoryExport } from "../shared/import-export";
 import { getSettings, saveSettings } from "../shared/settings";
-import type { DisplayMode } from "../shared/types";
+import type { DisplayMode, WatchStatusSource } from "../shared/types";
 
 const store = new IndexedDbHistoryStore();
 const importer = new JsonHistoryImporter();
 
 const elements = {
   displayMode: document.querySelector<HTMLSelectElement>("#display-mode"),
+  watchStatusSource: document.querySelector<HTMLSelectElement>("#watch-status-source"),
   debugLogging: document.querySelector<HTMLInputElement>("#debug-logging"),
   recordCount: document.querySelector<HTMLElement>("#record-count"),
   cardsScanned: document.querySelector<HTMLElement>("#cards-scanned"),
@@ -26,23 +27,24 @@ void init();
 async function init(): Promise<void> {
   const settings = await getSettings();
   required(elements.displayMode).value = settings.displayMode;
+  required(elements.watchStatusSource).value = settings.watchStatusSource;
   required(elements.debugLogging).checked = settings.debugLogging;
   await refresh();
 
   required(elements.displayMode).addEventListener("change", () => {
-    void saveSettings({
-      displayMode: required(elements.displayMode).value as DisplayMode,
-      debugLogging: required(elements.debugLogging).checked
-    }).then(() => {
+    void saveCurrentSettings().then(() => {
       setStatus("Display mode saved.");
     });
   });
 
+  required(elements.watchStatusSource).addEventListener("change", () => {
+    void saveCurrentSettings().then(() => {
+      setStatus("Watch-status source saved.");
+    });
+  });
+
   required(elements.debugLogging).addEventListener("change", () => {
-    void saveSettings({
-      displayMode: required(elements.displayMode).value as DisplayMode,
-      debugLogging: required(elements.debugLogging).checked
-    }).then(() => {
+    void saveCurrentSettings().then(() => {
       setStatus(`Verbose logging ${required(elements.debugLogging).checked ? "enabled" : "disabled"}.`);
     });
   });
@@ -57,6 +59,14 @@ async function init(): Promise<void> {
 
   required(elements.clearHistory).addEventListener("click", () => {
     void clearHistory();
+  });
+}
+
+function saveCurrentSettings(): Promise<unknown> {
+  return saveSettings({
+    displayMode: required(elements.displayMode).value as DisplayMode,
+    watchStatusSource: required(elements.watchStatusSource).value as WatchStatusSource,
+    debugLogging: required(elements.debugLogging).checked
   });
 }
 

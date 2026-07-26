@@ -22,6 +22,11 @@
           <option value="hide">Hide watched cards</option>
           <option value="disabled">Disabled</option>
         </select>
+        <label for="watch-status-source">Treat a card as watched when</label>
+        <select id="watch-status-source">
+          <option value="playtime">It has 30 seconds of actual playback</option>
+          <option value="playtime-or-card-progress">It has 30 seconds of playback or YouTube shows a red progress bar</option>
+        </select>
         <label class="checkbox-row">
           <input id="debug-logging" type="checkbox" />
           Verbose console logging

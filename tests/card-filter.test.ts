@@ -78,6 +78,47 @@ describe("RecommendationCardFilter", () => {
     expect(card.classList.contains("recommendation-leash-dim")).toBe(true);
   });
 
+  it.each([
+    ["the legacy partial-progress overlay", `<ytd-thumbnail-overlay-resume-playback-renderer><div id="progress" style="width: 68%"></div></ytd-thumbnail-overlay-resume-playback-renderer>`],
+    ["the current full-progress segment", `<div class="ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment" style="width: 100%"></div>`]
+  ])("can treat %s as watched", async (_description, progressMarkup) => {
+    document.body.innerHTML = `
+      <ytd-rich-item-renderer id="card">
+        <a href="/watch?v=new_Video-1">Video</a>
+        ${progressMarkup}
+      </ytd-rich-item-renderer>
+    `;
+
+    const filter = new RecommendationCardFilter(
+      store,
+      { displayMode: "badge", watchStatusSource: "playtime-or-card-progress" },
+      new YouTubeCardAdapter()
+    );
+    filter.enqueue(document.body);
+    await filter.flush();
+
+    expect(document.querySelector("#card .recommendation-leash-badge")).not.toBeNull();
+  });
+
+  it("does not treat an empty progress segment as watched", async () => {
+    document.body.innerHTML = `
+      <ytd-rich-item-renderer id="card">
+        <a href="/watch?v=new_Video-1">Video</a>
+        <div class="ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment" style="width: 0%"></div>
+      </ytd-rich-item-renderer>
+    `;
+
+    const filter = new RecommendationCardFilter(
+      store,
+      { displayMode: "badge", watchStatusSource: "playtime-or-card-progress" },
+      new YouTubeCardAdapter()
+    );
+    filter.enqueue(document.body);
+    await filter.flush();
+
+    expect(document.querySelector("#card .recommendation-leash-badge")).toBeNull();
+  });
+
   it("restores cards when settings change to disabled", async () => {
     document.body.innerHTML = `
       <ytd-video-renderer id="card">

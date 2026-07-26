@@ -10,6 +10,13 @@ const CARD_SELECTOR = [
   "ytm-video-with-context-renderer"
 ].join(",");
 
+const WATCH_PROGRESS_SELECTOR = [
+  "ytd-thumbnail-overlay-resume-playback-renderer #progress",
+  "ytm-thumbnail-overlay-resume-playback-renderer #progress",
+  "yt-thumbnail-overlay-resume-playback-renderer #progress",
+  ".ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment"
+].join(",");
+
 export interface CandidateCard {
   element: HTMLElement;
   videoIds: string[];
@@ -50,6 +57,13 @@ export class YouTubeCardAdapter {
     }
 
     return anchor.parentElement;
+  }
+
+  hasWatchProgressBar(card: HTMLElement): boolean {
+    return Array.from(card.querySelectorAll<HTMLElement>(WATCH_PROGRESS_SELECTOR)).some((progress) => {
+      const width = Number.parseFloat(progress.style.width);
+      return Number.isFinite(width) && width > 0;
+    });
   }
 
   #watchAnchors(root: ParentNode): HTMLAnchorElement[] {

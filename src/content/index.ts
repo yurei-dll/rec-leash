@@ -28,6 +28,7 @@ async function main(): Promise<void> {
     logger.setEnabled(nextSettings.debugLogging);
     logger.info("settings changed", nextSettings);
     cardFilter.setDisplayMode(nextSettings.displayMode);
+    cardFilter.setWatchStatusSource(nextSettings.watchStatusSource);
   });
 }
 
