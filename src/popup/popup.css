@@ -1,0 +1,100 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: Canvas;
+  color: CanvasText;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  box-sizing: border-box;
+  width: 360px;
+  padding: 16px;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.1rem;
+}
+
+header p,
+#status {
+  margin-top: 6px;
+  color: color-mix(in srgb, CanvasText 72%, transparent);
+  font-size: 0.9rem;
+}
+
+label {
+  display: block;
+  font-weight: 650;
+  margin: 14px 0 7px;
+}
+
+fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset:disabled {
+  opacity: 0.65;
+}
+
+select,
+button {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid color-mix(in srgb, CanvasText 28%, transparent);
+  border-radius: 6px;
+  padding: 0 8px;
+  background: Canvas;
+  color: CanvasText;
+  font: inherit;
+}
+
+button {
+  width: auto;
+  margin-top: 14px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+#status[data-error="true"] {
+  color: #c62828;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 550;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+}
+
+a {
+  display: inline-block;
+  margin-top: 10px;
+  color: LinkText;
+}

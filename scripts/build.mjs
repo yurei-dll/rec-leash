@@ -22,12 +22,22 @@ await Promise.all([
     target: "firefox109",
     sourcemap: true,
     logLevel: "info"
+  }),
+  build({
+    entryPoints: ["src/popup/popup.ts"],
+    bundle: true,
+    outfile: "dist/popup/popup.js",
+    format: "iife",
+    target: "firefox109",
+    sourcemap: true,
+    logLevel: "info"
   })
 ]);
 
 const files = [
   ["src/content/content.css", "dist/content/content.css"],
-  ["src/options/options.css", "dist/options/options.css"]
+  ["src/options/options.css", "dist/options/options.css"],
+  ["src/popup/popup.css", "dist/popup/popup.css"]
 ];
 
 for (const [from, to] of files) {
@@ -39,8 +49,13 @@ const sourceManifest = JSON.parse(await readFile("manifest.json", "utf8"));
 sourceManifest.content_scripts[0].js = ["content/index.js"];
 sourceManifest.content_scripts[0].css = ["content/content.css"];
 sourceManifest.options_ui.page = "options/options.html";
+sourceManifest.browser_action.default_popup = "popup/popup.html";
 await writeFile("dist/manifest.json", `${JSON.stringify(sourceManifest, null, 2)}\n`);
 
 const sourceOptionsHtml = await readFile("src/options/options.html", "utf8");
 const distOptionsHtml = sourceOptionsHtml.replace("../../dist/options/options.js", "./options.js");
 await writeFile("dist/options/options.html", distOptionsHtml);
+
+const sourcePopupHtml = await readFile("src/popup/popup.html", "utf8");
+const distPopupHtml = sourcePopupHtml.replace("../../dist/popup/popup.js", "./popup.js");
+await writeFile("dist/popup/popup.html", distPopupHtml);

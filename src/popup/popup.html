@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recommendation Leash</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Recommendation Leash</h1>
+        <p>Choose how watched recommendations are handled.</p>
+      </header>
+
+      <form id="settings-form">
+        <fieldset id="settings-fields" disabled>
+          <label for="display-mode">Display mode</label>
+          <select id="display-mode">
+            <option value="badge">Badge only</option>
+            <option value="dim">Badge and dim</option>
+            <option value="hide">Hide watched cards</option>
+            <option value="disabled">Disabled</option>
+          </select>
+
+          <label for="watch-status-source">Treat as watched when</label>
+          <select id="watch-status-source">
+            <option value="playtime">It has 30 seconds of actual playback</option>
+            <option value="playtime-or-card-progress">It has playback or a YouTube red progress bar</option>
+          </select>
+
+          <label class="checkbox-row">
+            <input id="debug-logging" type="checkbox" />
+            Verbose console logging
+          </label>
+
+          <button id="save-settings" type="submit">Save settings</button>
+        </fieldset>
+        <p id="status" role="status" aria-live="polite">Loading settings…</p>
+      </form>
+      <a href="../options/options.html" target="_blank">Open full options and local data</a>
+    </main>
+    <script src="../../dist/popup/popup.js"></script>
+  </body>
+</html>

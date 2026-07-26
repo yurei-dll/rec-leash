@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeSettings } from "../src/shared/settings";
+import { getSettings, normalizeSettings, saveSettings } from "../src/shared/settings";
 
 describe("settings", () => {
   it("defaults to visible diagnostic badge mode", () => {
@@ -23,5 +23,27 @@ describe("settings", () => {
   it("normalizes debug logging", () => {
     expect(normalizeSettings({ debugLogging: false }).debugLogging).toBe(false);
     expect(normalizeSettings({ debugLogging: "nope" }).debugLogging).toBe(true);
+  });
+
+  it("round-trips persisted settings and preserves fields during partial updates", async () => {
+    await browser.storage.local.clear();
+    await saveSettings({
+      displayMode: "dim",
+      watchStatusSource: "playtime-or-card-progress",
+      debugLogging: false
+    });
+
+    expect(await getSettings()).toEqual({
+      displayMode: "dim",
+      watchStatusSource: "playtime-or-card-progress",
+      debugLogging: false
+    });
+
+    await saveSettings({ displayMode: "hide" });
+    expect(await getSettings()).toEqual({
+      displayMode: "hide",
+      watchStatusSource: "playtime-or-card-progress",
+      debugLogging: false
+    });
   });
 });

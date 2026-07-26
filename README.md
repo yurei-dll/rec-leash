@@ -16,7 +16,7 @@ Firefox temporary add-ons are removed when the browser restarts, so repeat the l
 
 ## Controls
 
-Open the extension options page from Firefox's add-ons manager.
+Click the extension toolbar icon to open the quick settings popup. It includes display mode, watch-status source, and verbose logging. Use **Open full options and local data** in that popup (or Firefox's add-ons manager) for diagnostics and import/export controls.
 
 - **Badge only**: show a visible `WATCHED` badge on matched cards.
 - **Badge and dim**: badge matched cards and reduce their opacity.

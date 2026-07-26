@@ -21,7 +21,8 @@ export async function saveSettings(
   settings: Partial<ExtensionSettings>,
   api: WebExtensionApi = getBrowserApi()
 ): Promise<ExtensionSettings> {
-  const normalized = normalizeSettings({ ...DEFAULT_SETTINGS, ...settings });
+  const current = await getSettings(api);
+  const normalized = normalizeSettings({ ...current, ...settings });
   await api.storage.local.set({ [SETTINGS_KEY]: normalized });
   return normalized;
 }
