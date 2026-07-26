@@ -50,6 +50,10 @@ export class PlaybackThresholdTracker {
     this.#recorded = true;
   }
 
+  get isRecorded(): boolean {
+    return this.#recorded;
+  }
+
   get progressSeconds(): number {
     return Math.floor(this.#currentProgressMs() / 1000);
   }

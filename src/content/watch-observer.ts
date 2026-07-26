@@ -105,6 +105,9 @@ export class YouTubeWatchObserver {
 
   async #recordIfReady(): Promise<void> {
     if (!this.#tracker.tick()) {
+      if (this.#tracker.isRecorded) {
+        return;
+      }
       this.#logger.debug("watch threshold not reached", {
         progressSeconds: this.#tracker.progressSeconds,
         thresholdSeconds: WATCH_THRESHOLD_SECONDS
