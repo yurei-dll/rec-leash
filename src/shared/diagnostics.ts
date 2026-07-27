@@ -1,7 +1,7 @@
 import { getBrowserApi, type WebExtensionApi } from "./browser-api";
 import type { PageDiagnostics, StoredDiagnostics, WatchedVideoRecord } from "./types";
 
-const DIAGNOSTICS_KEY = "recommendationLeashDiagnostics";
+const DIAGNOSTICS_KEY = "recLeashDiagnostics";
 
 export async function getStoredDiagnostics(api: WebExtensionApi = getBrowserApi()): Promise<StoredDiagnostics> {
   const result = await api.storage.local.get(DIAGNOSTICS_KEY);

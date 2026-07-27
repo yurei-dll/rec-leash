@@ -93,7 +93,7 @@ async function exportHistory(): Promise<void> {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `recommendation-leash-history-${new Date().toISOString().slice(0, 10)}.json`;
+  anchor.download = `rec-leash-history-${new Date().toISOString().slice(0, 10)}.json`;
   anchor.click();
   URL.revokeObjectURL(url);
   setStatus("Export prepared.");
@@ -113,7 +113,7 @@ async function importHistory(): Promise<void> {
 }
 
 async function clearHistory(): Promise<void> {
-  if (!window.confirm("Clear all local Recommendation Leash watched-video history? This cannot be undone.")) {
+  if (!window.confirm("Clear all local rec-leash watched-video history? This cannot be undone.")) {
     return;
   }
 

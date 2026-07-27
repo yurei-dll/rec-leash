@@ -1,28 +1,39 @@
 {
   "manifest_version": 2,
-  "name": "Recommendation Leash",
+  "name": "rec-leash",
   "version": "0.1.0",
   "description": "Locally records watched YouTube videos and marks watched recommendations when they reappear.",
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "recommendation-leash@example.local",
+      "id": "rec-leash@yurei.dll",
       "strict_min_version": "109.0",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     }
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
-      "js": ["dist/content/index.js"],
-      "css": ["dist/content/content.css"],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*"
+      ],
+      "js": [
+        "dist/content/index.js"
+      ],
+      "css": [
+        "dist/content/content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "browser_action": {
-    "default_title": "Recommendation Leash",
+    "default_title": "rec-leash",
     "default_popup": "src/popup/popup.html"
   },
   "options_ui": {

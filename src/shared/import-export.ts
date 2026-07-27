@@ -9,7 +9,7 @@ export class JsonHistoryImporter implements HistoryImporter {
   parse(input: string): WatchedVideoRecord[] {
     const parsed = JSON.parse(input) as unknown;
     if (!parsed || typeof parsed !== "object") {
-      throw new Error("Import file must be a Recommendation Leash JSON export.");
+      throw new Error("Import file must be a rec-leash JSON export.");
     }
 
     const records = (parsed as Partial<HistoryExport>).records;

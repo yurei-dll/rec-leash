@@ -4,8 +4,8 @@ import type { Logger } from "../shared/logger";
 import type { DisplayMode, PageDiagnostics, WatchStatusSource } from "../shared/types";
 import { YouTubeCardAdapter, type CandidateCard } from "./card-adapter";
 
-const BADGE_CLASS = "recommendation-leash-badge";
-const CARD_ATTR = "data-recommendation-leash-state";
+const BADGE_CLASS = "rec-leash-badge";
+const CARD_ATTR = "data-rec-leash-state";
 
 export class RecommendationCardFilter {
   #store: HistoryStore;
@@ -107,7 +107,7 @@ export class RecommendationCardFilter {
     let restored = 0;
     let reapplied = 0;
     document.querySelectorAll<HTMLElement>(`[${CARD_ATTR}]`).forEach((card) => {
-      const isWatched = card.dataset.recommendationLeashWatched === "true";
+      const isWatched = card.dataset.recLeashWatched === "true";
       if (!isWatched || this.#settings.displayMode === "disabled") {
         restoreCard(card);
         restored += 1;
@@ -122,7 +122,7 @@ export class RecommendationCardFilter {
   async #processCard(card: CandidateCard): Promise<void> {
     this.diagnostics.cardsScanned += 1;
     const watched = await this.#isWatched(card);
-    card.element.dataset.recommendationLeashWatched = String(watched);
+    card.element.dataset.recLeashWatched = String(watched);
     this.#logger?.debug("card scanned", {
       videoIds: card.videoIds,
       watched,
@@ -166,14 +166,14 @@ export function mutateCard(card: HTMLElement, mode: DisplayMode): boolean {
   const previousState = card.getAttribute(CARD_ATTR);
   card.setAttribute(CARD_ATTR, mode);
   ensureBadge(card);
-  card.classList.toggle("recommendation-leash-dim", mode === "dim");
-  card.classList.toggle("recommendation-leash-hide", mode === "hide");
+  card.classList.toggle("rec-leash-dim", mode === "dim");
+  card.classList.toggle("rec-leash-hide", mode === "hide");
   return previousState !== mode;
 }
 
 export function restoreCard(card: HTMLElement): void {
   card.removeAttribute(CARD_ATTR);
-  card.classList.remove("recommendation-leash-dim", "recommendation-leash-hide");
+  card.classList.remove("rec-leash-dim", "rec-leash-hide");
   card.querySelectorAll(`.${BADGE_CLASS}`).forEach((badge) => badge.remove());
 }
 

@@ -33,5 +33,5 @@ async function main(): Promise<void> {
 }
 
 void main().catch((error: unknown) => {
-  console.error("[Recommendation Leash] content script failed to start", error);
+  console.error("[rec-leash] content script failed to start", error);
 });

@@ -48,8 +48,8 @@ describe("RecommendationCardFilter", () => {
     await filter.flush();
 
     const card = document.querySelector<HTMLElement>("#card");
-    expect(card?.querySelectorAll(".recommendation-leash-badge")).toHaveLength(1);
-    expect(card?.getAttribute("data-recommendation-leash-state")).toBe("badge");
+    expect(card?.querySelectorAll(".rec-leash-badge")).toHaveLength(1);
+    expect(card?.getAttribute("data-rec-leash-state")).toBe("badge");
   });
 
   it("ignores unrelated links", async () => {
@@ -63,7 +63,7 @@ describe("RecommendationCardFilter", () => {
     filter.enqueue(document.body);
     await filter.flush();
 
-    expect(document.querySelector(".recommendation-leash-badge")).toBeNull();
+    expect(document.querySelector(".rec-leash-badge")).toBeNull();
   });
 
   it("applies dynamically inserted cards", async () => {
@@ -75,7 +75,7 @@ describe("RecommendationCardFilter", () => {
     filter.enqueue(card);
     await filter.flush();
 
-    expect(card.classList.contains("recommendation-leash-dim")).toBe(true);
+    expect(card.classList.contains("rec-leash-dim")).toBe(true);
   });
 
   it.each([
@@ -97,7 +97,7 @@ describe("RecommendationCardFilter", () => {
     filter.enqueue(document.body);
     await filter.flush();
 
-    expect(document.querySelector("#card .recommendation-leash-badge")).not.toBeNull();
+    expect(document.querySelector("#card .rec-leash-badge")).not.toBeNull();
   });
 
   it("does not treat an empty progress segment as watched", async () => {
@@ -116,7 +116,7 @@ describe("RecommendationCardFilter", () => {
     filter.enqueue(document.body);
     await filter.flush();
 
-    expect(document.querySelector("#card .recommendation-leash-badge")).toBeNull();
+    expect(document.querySelector("#card .rec-leash-badge")).toBeNull();
   });
 
   it("restores cards when settings change to disabled", async () => {
@@ -132,7 +132,7 @@ describe("RecommendationCardFilter", () => {
     filter.setDisplayMode("disabled");
 
     const card = document.querySelector<HTMLElement>("#card");
-    expect(card?.classList.contains("recommendation-leash-hide")).toBe(false);
-    expect(card?.querySelector(".recommendation-leash-badge")).toBeNull();
+    expect(card?.classList.contains("rec-leash-hide")).toBe(false);
+    expect(card?.querySelector(".rec-leash-badge")).toBeNull();
   });
 });

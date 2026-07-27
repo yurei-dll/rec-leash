@@ -1,4 +1,4 @@
-.recommendation-leash-badge {
+.rec-leash-badge {
   position: absolute;
   z-index: 10;
   top: 6px;
@@ -12,14 +12,14 @@
   pointer-events: none;
 }
 
-[data-recommendation-leash-state] {
+[data-rec-leash-state] {
   position: relative;
 }
 
-.recommendation-leash-dim {
+.rec-leash-dim {
   opacity: 0.45;
 }
 
-.recommendation-leash-hide {
+.rec-leash-hide {
   display: none !important;
 }

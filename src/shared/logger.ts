@@ -31,7 +31,7 @@ export class Logger {
       return;
     }
 
-    const prefix = "[Recommendation Leash]";
+    const prefix = "[rec-leash]";
     if (details === undefined) {
       console[level](`${prefix} ${message}`);
       return;
