@@ -102,9 +102,10 @@ Run:
 
 ```sh
 npm run build
+npm run package:firefox
 ```
 
-The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`.
+The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`. The Firefox packaging command rebuilds the extension and creates an AMO-uploadable archive such as `web-ext-artifacts/recommendation-leash.firefox.0.1.0.zip`; the `.firefox.` marker keeps artifact names unambiguous if other browser packages are added later.
 
 ## Known Selector Fragility
 
