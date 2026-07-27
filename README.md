@@ -1,6 +1,6 @@
-# Recommendation Leash
+# rec-leash
 
-Recommendation Leash is a Firefox-first WebExtension that keeps a local history of watched YouTube video IDs and marks watched videos when they reappear in YouTube recommendations, search results, or feed-like pages.
+rec-leash is a Firefox-first WebExtension that keeps a local history of watched YouTube video IDs and marks watched videos when they reappear in YouTube recommendations, search results, or feed-like pages.
 
 The MVP is intentionally local-first and diagnostic-first: watched recommendation cards receive a `WATCHED` badge by default. You can switch to dimming, hiding, or disabling the card treatment from the options page.
 
@@ -23,19 +23,19 @@ Click the extension toolbar icon to open the quick settings popup. It includes d
 - **Hide watched cards**: remove matched cards from view.
 - **Disabled**: restore cards and stop applying visual changes.
 - **Watch-status source**: default to the extension's 30-second actual-playback history, or also treat a card with YouTube's red resume-progress bar as watched. The latter is deliberately broad and can hide nearly every previously started video.
-- **Verbose console logging**: enabled by default for the MVP. Open the YouTube tab's developer console and filter for `Recommendation Leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
+- **Verbose console logging**: enabled by default for the MVP. Open the YouTube tab's developer console and filter for `rec-leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
 
 The options page also shows:
 
 - local watched-record count
 - last page/session card diagnostics: scanned, matched, modified
 - last recorded video
-- export/import for Recommendation Leash JSON
+- export/import for rec-leash JSON
 - confirmed local-history clearing
 
 ## Privacy Model
 
-Recommendation Leash stores all watch history locally in the extension's IndexedDB database. It does not use the YouTube Data API, private YouTube APIs, account automation, cookies, credentials, comments, or browsing history outside matched YouTube pages.
+rec-leash stores all watch history locally in the extension's IndexedDB database. It does not use the YouTube Data API, private YouTube APIs, account automation, cookies, credentials, comments, or browsing history outside matched YouTube pages.
 
 Requested permissions are deliberately small:
 
@@ -90,7 +90,7 @@ Covered areas:
 - watched-record deduplication
 - playback threshold state
 - settings normalization
-- Recommendation Leash JSON import/export
+- rec-leash JSON import/export
 - representative Google Takeout fixture parsing
 - recommendation-card shapes, duplicate links, unrelated links, dynamic insertions
 - idempotent rescanning
@@ -105,7 +105,7 @@ npm run build
 npm run package:firefox
 ```
 
-The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`. The Firefox packaging command rebuilds the extension and creates an AMO-uploadable archive such as `web-ext-artifacts/recommendation-leash.firefox.0.1.0.zip`; the `.firefox.` marker keeps artifact names unambiguous if other browser packages are added later.
+The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`. The Firefox packaging command rebuilds the extension and creates an AMO-uploadable archive such as `web-ext-artifacts/rec-leash.firefox.0.1.0.zip`; the `.firefox.` marker keeps artifact names unambiguous if other browser packages are added later.
 
 ## Known Selector Fragility
 
@@ -124,4 +124,4 @@ Planned flow:
 3. The importer parses recognized Takeout formats into local `WatchedVideoRecord` values.
 4. Records are deduplicated through `HistoryStore.importRecords`.
 
-Recommendation Leash will not sign into Google, automate Google account pages, create API credentials, or call private YouTube endpoints.
+rec-leash will not sign into Google, automate Google account pages, create API credentials, or call private YouTube endpoints.

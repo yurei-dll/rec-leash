@@ -12,7 +12,7 @@ export interface HistoryStore {
   exportHistory(): Promise<HistoryExport>;
 }
 
-const DB_NAME = "recommendation-leash";
+const DB_NAME = "rec-leash";
 const DB_VERSION = 1;
 const STORE_NAME = "watchedVideos";
 

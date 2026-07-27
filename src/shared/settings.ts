@@ -1,7 +1,7 @@
 import { getBrowserApi, type WebExtensionApi } from "./browser-api";
 import type { DisplayMode, ExtensionSettings, WatchStatusSource } from "./types";
 
-export const SETTINGS_KEY = "recommendationLeashSettings";
+export const SETTINGS_KEY = "recLeashSettings";
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
   displayMode: "badge",
