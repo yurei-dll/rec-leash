@@ -6,6 +6,7 @@
   "description": "Firefox-first WebExtension that marks watched YouTube recommendations using local history.",
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit && node scripts/build.mjs",
+    "package:firefox": "npm run build && node scripts/package-firefox.mjs",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
@@ -16,6 +17,7 @@
     "fake-indexeddb": "^6.0.0",
     "jsdom": "^24.1.3",
     "typescript": "^5.5.4",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "web-ext": "^0.0.1"
   }
 }
