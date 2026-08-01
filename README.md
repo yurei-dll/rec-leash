@@ -2,7 +2,7 @@
 
 rec-leash is a Firefox-first WebExtension that keeps a local history of watched YouTube video IDs and marks watched videos when they reappear in YouTube recommendations, search results, or feed-like pages.
 
-The MVP is intentionally local-first and diagnostic-first: watched recommendation cards receive a `WATCHED` badge by default. You can switch to dimming, hiding, or disabling the card treatment from the options page.
+The MVP is intentionally local-first and diagnostic-first: watched recommendation cards receive a `WATCHED` badge and are dimmed by default. You can switch to badge-only, hiding, or disabling the card treatment from the options page.
 
 ## Install In Firefox
 
@@ -23,7 +23,7 @@ Click the extension toolbar icon to open the quick settings popup. It includes d
 - **Hide watched cards**: remove matched cards from view.
 - **Disabled**: restore cards and stop applying visual changes.
 - **Watch-status source**: default to the extension's 30-second actual-playback history, or also treat a card with YouTube's red resume-progress bar as watched. The latter is deliberately broad and can hide nearly every previously started video.
-- **Verbose console logging**: enabled by default for the MVP. Open the YouTube tab's developer console and filter for `rec-leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
+- **Verbose console logging**: disabled by default. Enable it when diagnosing the extension. Open the YouTube tab's developer console and filter for `rec-leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
 
 The options page also shows:
 
