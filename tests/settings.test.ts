@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { getSettings, normalizeSettings, saveSettings } from "../src/shared/settings";
 
 describe("settings", () => {
-  it("defaults to visible diagnostic badge mode", () => {
-    expect(normalizeSettings({}).displayMode).toBe("badge");
+  it("defaults to badge-and-dim mode with quiet logging", () => {
+    expect(normalizeSettings({}).displayMode).toBe("dim");
     expect(normalizeSettings({}).watchStatusSource).toBe("playtime");
-    expect(normalizeSettings({}).debugLogging).toBe(true);
+    expect(normalizeSettings({}).debugLogging).toBe(false);
   });
 
   it("normalizes watch-status sources", () => {
@@ -17,12 +17,13 @@ describe("settings", () => {
 
   it("accepts supported modes and rejects unknown modes", () => {
     expect(normalizeSettings({ displayMode: "hide" }).displayMode).toBe("hide");
-    expect(normalizeSettings({ displayMode: "unknown" }).displayMode).toBe("badge");
+    expect(normalizeSettings({ displayMode: "unknown" }).displayMode).toBe("dim");
   });
 
   it("normalizes debug logging", () => {
+    expect(normalizeSettings({ debugLogging: true }).debugLogging).toBe(true);
     expect(normalizeSettings({ debugLogging: false }).debugLogging).toBe(false);
-    expect(normalizeSettings({ debugLogging: "nope" }).debugLogging).toBe(true);
+    expect(normalizeSettings({ debugLogging: "nope" }).debugLogging).toBe(false);
   });
 
   it("round-trips persisted settings and preserves fields during partial updates", async () => {

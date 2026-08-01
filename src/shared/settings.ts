@@ -4,9 +4,9 @@ import type { DisplayMode, ExtensionSettings, WatchStatusSource } from "./types"
 export const SETTINGS_KEY = "recLeashSettings";
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
-  displayMode: "badge",
+  displayMode: "dim",
   watchStatusSource: "playtime",
-  debugLogging: true
+  debugLogging: false
 };
 
 const DISPLAY_MODES = new Set<DisplayMode>(["badge", "dim", "hide", "disabled"]);
