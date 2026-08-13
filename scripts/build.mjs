@@ -6,6 +6,15 @@ await rm("dist", { recursive: true, force: true });
 
 await Promise.all([
   build({
+    entryPoints: ["src/background/index.ts"],
+    bundle: true,
+    outfile: "dist/background/index.js",
+    format: "iife",
+    target: "firefox109",
+    sourcemap: true,
+    logLevel: "info"
+  }),
+  build({
     entryPoints: ["src/content/index.ts"],
     bundle: true,
     outfile: "dist/content/index.js",
@@ -48,6 +57,7 @@ for (const [from, to] of files) {
 const sourceManifest = JSON.parse(await readFile("manifest.json", "utf8"));
 sourceManifest.content_scripts[0].js = ["content/index.js"];
 sourceManifest.content_scripts[0].css = ["content/content.css"];
+sourceManifest.background.scripts = ["background/index.js"];
 sourceManifest.options_ui.page = "options/options.html";
 sourceManifest.browser_action.default_popup = "popup/popup.html";
 await writeFile("dist/manifest.json", `${JSON.stringify(sourceManifest, null, 2)}\n`);

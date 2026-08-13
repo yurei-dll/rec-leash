@@ -1,10 +1,10 @@
 import { getStoredDiagnostics } from "../shared/diagnostics";
-import { IndexedDbHistoryStore } from "../shared/history-store";
+import { ExtensionHistoryStore } from "../shared/history-store";
 import { JsonHistoryImporter, stringifyHistoryExport } from "../shared/import-export";
 import { getSettings, saveSettings } from "../shared/settings";
 import type { DisplayMode, WatchStatusSource } from "../shared/types";
 
-const store = new IndexedDbHistoryStore();
+const store = new ExtensionHistoryStore();
 const importer = new JsonHistoryImporter();
 
 const elements = {

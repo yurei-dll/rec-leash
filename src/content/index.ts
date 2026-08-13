@@ -1,11 +1,12 @@
 import { RecommendationCardFilter } from "./card-filter";
 import { YouTubeWatchObserver } from "./watch-observer";
-import { IndexedDbHistoryStore } from "../shared/history-store";
+import { ExtensionHistoryStore, IndexedDbHistoryStore } from "../shared/history-store";
 import { Logger } from "../shared/logger";
 import { getSettings, normalizeSettings, SETTINGS_KEY } from "../shared/settings";
 
 async function main(): Promise<void> {
-  const store = new IndexedDbHistoryStore();
+  const store = new ExtensionHistoryStore();
+  await migratePageOriginHistory(store);
   const settings = await getSettings();
   const logger = new Logger(settings.debugLogging);
   const watchObserver = new YouTubeWatchObserver(store, logger);
@@ -30,6 +31,20 @@ async function main(): Promise<void> {
     cardFilter.setDisplayMode(nextSettings.displayMode);
     cardFilter.setWatchStatusSource(nextSettings.watchStatusSource);
   });
+}
+
+async function migratePageOriginHistory(store: ExtensionHistoryStore): Promise<void> {
+  const migrationKey = `recLeashHistoryMigrated:${window.location.hostname}`;
+  const state = await browser.storage.local.get(migrationKey);
+  if (state[migrationKey] === true) {
+    return;
+  }
+
+  const legacyRecords = await new IndexedDbHistoryStore().list();
+  if (legacyRecords.length > 0) {
+    await store.importRecords(legacyRecords);
+  }
+  await browser.storage.local.set({ [migrationKey]: true });
 }
 
 void main().catch((error: unknown) => {

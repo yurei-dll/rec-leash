@@ -61,12 +61,18 @@ export class RecommendationCardFilter {
   }
 
   setDisplayMode(displayMode: DisplayMode): void {
+    if (displayMode === this.#settings.displayMode) {
+      return;
+    }
     this.#logger?.info("display mode changed", { displayMode });
     this.#settings.displayMode = displayMode;
     this.applyModeToExistingCards();
   }
 
   setWatchStatusSource(watchStatusSource: WatchStatusSource): void {
+    if (watchStatusSource === this.#settings.watchStatusSource) {
+      return;
+    }
     this.#logger?.info("watch status source changed", { watchStatusSource });
     this.#settings.watchStatusSource = watchStatusSource;
     this.enqueue(document.body);

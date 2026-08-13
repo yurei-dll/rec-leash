@@ -56,7 +56,7 @@ export class YouTubeCardAdapter {
       return container;
     }
 
-    return anchor.parentElement;
+    return null;
   }
 
   hasWatchProgressBar(card: HTMLElement): boolean {

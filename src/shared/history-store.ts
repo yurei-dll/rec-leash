@@ -1,4 +1,5 @@
 import { nowIso } from "./time";
+import { getBrowserApi, type WebExtensionApi } from "./browser-api";
 import type { HistoryExport, WatchedVideoRecord } from "./types";
 
 export interface HistoryStore {
@@ -15,6 +16,14 @@ export interface HistoryStore {
 const DB_NAME = "rec-leash";
 const DB_VERSION = 1;
 const STORE_NAME = "watchedVideos";
+
+export const HISTORY_MESSAGE_TYPE = "rec-leash:history";
+
+type HistoryRequest =
+  | { type: typeof HISTORY_MESSAGE_TYPE; operation: "upsert"; record: WatchedVideoRecord }
+  | { type: typeof HISTORY_MESSAGE_TYPE; operation: "get" | "has"; videoId: string }
+  | { type: typeof HISTORY_MESSAGE_TYPE; operation: "count" | "list" | "clear" | "exportHistory" }
+  | { type: typeof HISTORY_MESSAGE_TYPE; operation: "importRecords"; records: WatchedVideoRecord[] };
 
 export function mergeWatchedRecord(
   existing: WatchedVideoRecord | undefined,
@@ -126,6 +135,76 @@ export class IndexedDbHistoryStore implements HistoryStore {
     });
 
     return this.#dbPromise;
+  }
+}
+
+/**
+ * Routes history access through the extension background page. Content-script
+ * IndexedDB belongs to the web page's origin, so opening the database directly
+ * there creates a different history from the one visible to extension pages.
+ */
+export class ExtensionHistoryStore implements HistoryStore {
+  #api: WebExtensionApi;
+
+  constructor(api: WebExtensionApi = getBrowserApi()) {
+    this.#api = api;
+  }
+
+  upsert(record: WatchedVideoRecord): Promise<WatchedVideoRecord> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "upsert", record });
+  }
+
+  get(videoId: string): Promise<WatchedVideoRecord | undefined> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "get", videoId });
+  }
+
+  has(videoId: string): Promise<boolean> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "has", videoId });
+  }
+
+  count(): Promise<number> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "count" });
+  }
+
+  list(): Promise<WatchedVideoRecord[]> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "list" });
+  }
+
+  clear(): Promise<void> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "clear" });
+  }
+
+  importRecords(records: WatchedVideoRecord[]): Promise<number> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "importRecords", records });
+  }
+
+  exportHistory(): Promise<HistoryExport> {
+    return this.#send({ type: HISTORY_MESSAGE_TYPE, operation: "exportHistory" });
+  }
+
+  async #send<T>(request: HistoryRequest): Promise<T> {
+    const response = (await this.#api.runtime.sendMessage(request)) as { ok: true; value: T } | { ok: false; error: string };
+    if (!response?.ok) {
+      throw new Error(response?.error ?? "History service returned no response");
+    }
+    return response.value;
+  }
+}
+
+export function isHistoryRequest(value: unknown): value is HistoryRequest {
+  return Boolean(value && typeof value === "object" && (value as { type?: unknown }).type === HISTORY_MESSAGE_TYPE);
+}
+
+export async function handleHistoryRequest(request: HistoryRequest, store: HistoryStore): Promise<unknown> {
+  switch (request.operation) {
+    case "upsert": return store.upsert(request.record);
+    case "get": return store.get(request.videoId);
+    case "has": return store.has(request.videoId);
+    case "count": return store.count();
+    case "list": return store.list();
+    case "clear": return store.clear();
+    case "importRecords": return store.importRecords(request.records);
+    case "exportHistory": return store.exportHistory();
   }
 }
 

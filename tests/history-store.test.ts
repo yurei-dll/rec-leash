@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { MemoryHistoryStore } from "../src/shared/history-store";
+import {
+  ExtensionHistoryStore,
+  handleHistoryRequest,
+  HISTORY_MESSAGE_TYPE,
+  MemoryHistoryStore
+} from "../src/shared/history-store";
 import { JsonHistoryImporter, stringifyHistoryExport } from "../src/shared/import-export";
 
 describe("history store", () => {
@@ -43,5 +48,35 @@ describe("history store", () => {
 
     expect(imported).toHaveLength(1);
     expect(imported[0]?.videoId).toBe("abc_DEF-123");
+  });
+
+  it("routes extension-page and content-script access through one history service", async () => {
+    const centralStore = new MemoryHistoryStore();
+    const api = {
+      storage: browser.storage,
+      runtime: {
+        onMessage: browser.runtime.onMessage,
+        sendMessage: async (message: unknown) => ({
+          ok: true as const,
+          value: await handleHistoryRequest(
+            message as Parameters<typeof handleHistoryRequest>[0],
+            centralStore
+          )
+        })
+      }
+    };
+    const contentStore = new ExtensionHistoryStore(api);
+    const optionsStore = new ExtensionHistoryStore(api);
+
+    await contentStore.upsert({
+      videoId: "abc_DEF-123",
+      firstObservedAt: "2026-01-01T00:00:00.000Z",
+      lastObservedAt: "2026-01-01T00:00:00.000Z",
+      source: "watch-page"
+    });
+
+    expect(await optionsStore.count()).toBe(1);
+    expect(await optionsStore.has("abc_DEF-123")).toBe(true);
+    expect(HISTORY_MESSAGE_TYPE).toBe("rec-leash:history");
   });
 });

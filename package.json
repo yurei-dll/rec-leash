@@ -1,6 +1,6 @@
 {
   "name": "rec-leash",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "description": "Firefox-first WebExtension that marks watched YouTube recommendations using local history.",

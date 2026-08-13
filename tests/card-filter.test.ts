@@ -66,6 +66,23 @@ describe("RecommendationCardFilter", () => {
     expect(document.querySelector(".rec-leash-badge")).toBeNull();
   });
 
+  it("does not attach badges to watch links in expanded comments", async () => {
+    document.body.innerHTML = `
+      <ytd-comment-thread-renderer id="comment">
+        <div id="content-text">
+          Try <a href="/watch?v=abc_DEF-123">this watched video</a>
+        </div>
+      </ytd-comment-thread-renderer>
+    `;
+
+    const filter = new RecommendationCardFilter(store, { displayMode: "badge" }, new YouTubeCardAdapter());
+    filter.enqueue(document.body);
+    await filter.flush();
+
+    expect(document.querySelector("#comment .rec-leash-badge")).toBeNull();
+    expect(document.querySelector("#content-text")?.hasAttribute("data-rec-leash-state")).toBe(false);
+  });
+
   it("applies dynamically inserted cards", async () => {
     const filter = new RecommendationCardFilter(store, { displayMode: "dim" }, new YouTubeCardAdapter());
     const card = document.createElement("ytd-compact-video-renderer");
@@ -134,5 +151,30 @@ describe("RecommendationCardFilter", () => {
     const card = document.querySelector<HTMLElement>("#card");
     expect(card?.classList.contains("rec-leash-hide")).toBe(false);
     expect(card?.querySelector(".rec-leash-badge")).toBeNull();
+  });
+
+  it("does not rescan the page when settings values are unchanged", async () => {
+    document.body.innerHTML = `
+      <ytd-video-renderer id="card">
+        <a href="/watch?v=abc_DEF-123">Video</a>
+      </ytd-video-renderer>
+    `;
+
+    const filter = new RecommendationCardFilter(
+      store,
+      { displayMode: "badge", watchStatusSource: "playtime" },
+      new YouTubeCardAdapter()
+    );
+    filter.enqueue(document.body);
+    await filter.flush();
+    const scannedBeforeSettingsWrite = filter.diagnostics.cardsScanned;
+    const matchedBeforeSettingsWrite = filter.diagnostics.cardsMatched;
+
+    filter.setDisplayMode("badge");
+    filter.setWatchStatusSource("playtime");
+    await filter.flush();
+
+    expect(filter.diagnostics.cardsScanned).toBe(scannedBeforeSettingsWrite);
+    expect(filter.diagnostics.cardsMatched).toBe(matchedBeforeSettingsWrite);
   });
 });
