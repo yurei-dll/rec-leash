@@ -6,6 +6,7 @@ const elements = {
   fields: document.querySelector<HTMLFieldSetElement>("#settings-fields"),
   displayMode: document.querySelector<HTMLSelectElement>("#display-mode"),
   watchStatusSource: document.querySelector<HTMLSelectElement>("#watch-status-source"),
+  showUnwatchedChip: document.querySelector<HTMLInputElement>("#show-unwatched-chip"),
   debugLogging: document.querySelector<HTMLInputElement>("#debug-logging"),
   saveButton: document.querySelector<HTMLButtonElement>("#save-settings"),
   status: document.querySelector<HTMLElement>("#status")
@@ -24,6 +25,7 @@ async function init(): Promise<void> {
     const settings = await getSettings();
     required(elements.displayMode).value = settings.displayMode;
     required(elements.watchStatusSource).value = settings.watchStatusSource;
+    required(elements.showUnwatchedChip).checked = settings.showUnwatchedChip;
     required(elements.debugLogging).checked = settings.debugLogging;
     required(elements.fields).disabled = false;
     status.textContent = "";
@@ -44,6 +46,7 @@ async function saveCurrentSettings(): Promise<void> {
     await saveSettings({
       displayMode: required(elements.displayMode).value as DisplayMode,
       watchStatusSource: required(elements.watchStatusSource).value as WatchStatusSource,
+      showUnwatchedChip: required(elements.showUnwatchedChip).checked,
       debugLogging: required(elements.debugLogging).checked
     });
     status.textContent = "Settings saved.";

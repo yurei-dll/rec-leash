@@ -3,6 +3,7 @@ import { YouTubeWatchObserver } from "./watch-observer";
 import { ExtensionHistoryStore, IndexedDbHistoryStore } from "../shared/history-store";
 import { Logger } from "../shared/logger";
 import { getSettings, normalizeSettings, SETTINGS_KEY } from "../shared/settings";
+import { UnwatchedChipController } from "./unwatched-filter";
 
 async function main(): Promise<void> {
   const store = new ExtensionHistoryStore();
@@ -11,6 +12,7 @@ async function main(): Promise<void> {
   const logger = new Logger(settings.debugLogging);
   const watchObserver = new YouTubeWatchObserver(store, logger);
   const cardFilter = new RecommendationCardFilter(store, settings, undefined, logger);
+  const unwatchedFilter = new UnwatchedChipController(settings.showUnwatchedChip, logger);
 
   logger.info("content script loaded", {
     href: window.location.href,
@@ -19,6 +21,7 @@ async function main(): Promise<void> {
   });
   watchObserver.start();
   cardFilter.start();
+  unwatchedFilter.start();
 
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== "local" || !changes[SETTINGS_KEY]) {
@@ -30,6 +33,7 @@ async function main(): Promise<void> {
     logger.info("settings changed", nextSettings);
     cardFilter.setDisplayMode(nextSettings.displayMode);
     cardFilter.setWatchStatusSource(nextSettings.watchStatusSource);
+    unwatchedFilter.setEnabled(nextSettings.showUnwatchedChip);
   });
 }
 

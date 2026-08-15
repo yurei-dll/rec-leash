@@ -23,6 +23,7 @@ Click the extension toolbar icon to open the quick settings popup. It includes d
 - **Hide watched cards**: remove matched cards from view.
 - **Disabled**: restore cards and stop applying visual changes.
 - **Watch-status source**: default to the extension's 30-second actual-playback history, or also treat a card with YouTube's red resume-progress bar as watched. The latter is deliberately broad and can hide nearly every previously started video.
+- **Unwatched topic chip**: optionally add a native-looking chip after YouTube's **All** chip. While selected, it hides cards matched by Rec Leash's local watched history and keeps filtering recommendations loaded later.
 - **Verbose console logging**: disabled by default. Enable it when diagnosing the extension. Open the YouTube tab's developer console and filter for `rec-leash` to see startup, navigation, playback-threshold, scan, match, and mutation activity.
 
 The options page also shows:

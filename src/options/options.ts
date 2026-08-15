@@ -10,6 +10,7 @@ const importer = new JsonHistoryImporter();
 const elements = {
   displayMode: document.querySelector<HTMLSelectElement>("#display-mode"),
   watchStatusSource: document.querySelector<HTMLSelectElement>("#watch-status-source"),
+  showUnwatchedChip: document.querySelector<HTMLInputElement>("#show-unwatched-chip"),
   debugLogging: document.querySelector<HTMLInputElement>("#debug-logging"),
   recordCount: document.querySelector<HTMLElement>("#record-count"),
   cardsScanned: document.querySelector<HTMLElement>("#cards-scanned"),
@@ -28,6 +29,7 @@ async function init(): Promise<void> {
   const settings = await getSettings();
   required(elements.displayMode).value = settings.displayMode;
   required(elements.watchStatusSource).value = settings.watchStatusSource;
+  required(elements.showUnwatchedChip).checked = settings.showUnwatchedChip;
   required(elements.debugLogging).checked = settings.debugLogging;
   await refresh();
 
@@ -49,6 +51,12 @@ async function init(): Promise<void> {
     });
   });
 
+  required(elements.showUnwatchedChip).addEventListener("change", () => {
+    void saveCurrentSettings().then(() => {
+      setStatus(`Unwatched filter ${required(elements.showUnwatchedChip).checked ? "enabled" : "disabled"}.`);
+    });
+  });
+
   required(elements.exportHistory).addEventListener("click", () => {
     void exportHistory();
   });
@@ -66,6 +74,7 @@ function saveCurrentSettings(): Promise<unknown> {
   return saveSettings({
     displayMode: required(elements.displayMode).value as DisplayMode,
     watchStatusSource: required(elements.watchStatusSource).value as WatchStatusSource,
+    showUnwatchedChip: required(elements.showUnwatchedChip).checked,
     debugLogging: required(elements.debugLogging).checked
   });
 }

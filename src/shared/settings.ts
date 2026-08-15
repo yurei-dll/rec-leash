@@ -6,6 +6,7 @@ export const SETTINGS_KEY = "recLeashSettings";
 export const DEFAULT_SETTINGS: ExtensionSettings = {
   displayMode: "dim",
   watchStatusSource: "playtime",
+  showUnwatchedChip: false,
   debugLogging: false
 };
 
@@ -35,11 +36,13 @@ export function normalizeSettings(value: unknown): ExtensionSettings {
   const mode = (value as Partial<ExtensionSettings>).displayMode;
   const watchStatusSource = (value as Partial<ExtensionSettings>).watchStatusSource;
   const debugLogging = (value as Partial<ExtensionSettings>).debugLogging;
+  const showUnwatchedChip = (value as Partial<ExtensionSettings>).showUnwatchedChip;
   return {
     displayMode: DISPLAY_MODES.has(mode as DisplayMode) ? (mode as DisplayMode) : DEFAULT_SETTINGS.displayMode,
     watchStatusSource: WATCH_STATUS_SOURCES.has(watchStatusSource as WatchStatusSource)
       ? (watchStatusSource as WatchStatusSource)
       : DEFAULT_SETTINGS.watchStatusSource,
+    showUnwatchedChip: typeof showUnwatchedChip === "boolean" ? showUnwatchedChip : DEFAULT_SETTINGS.showUnwatchedChip,
     debugLogging: typeof debugLogging === "boolean" ? debugLogging : DEFAULT_SETTINGS.debugLogging
   };
 }

@@ -23,3 +23,41 @@
 .rec-leash-hide {
   display: none !important;
 }
+
+.rec-leash-unwatched-filtered {
+  display: none !important;
+}
+
+.rec-leash-unwatched-chip {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 32px;
+  margin-right: 12px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.1));
+  color: var(--yt-spec-text-primary, #f1f1f1);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rec-leash-unwatched-chip:hover {
+  background: var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.2));
+}
+
+.rec-leash-unwatched-chip.iron-selected {
+  background: var(--yt-spec-text-primary, #f1f1f1);
+  color: var(--yt-spec-text-primary-inverse, #0f0f0f);
+}
+
+.rec-leash-unwatched-chip:focus-visible {
+  outline: 2px solid var(--yt-spec-call-to-action, #3ea6ff);
+  outline-offset: 2px;
+}

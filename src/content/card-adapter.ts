@@ -1,6 +1,6 @@
 import { extractVideoIdFromUrl } from "../shared/video-id";
 
-const CARD_SELECTOR = [
+const CARD_SELECTORS = [
   "ytd-rich-item-renderer",
   "ytd-video-renderer",
   "ytd-compact-video-renderer",
@@ -8,6 +8,15 @@ const CARD_SELECTOR = [
   "ytd-playlist-video-renderer",
   "yt-lockup-view-model",
   "ytm-video-with-context-renderer"
+];
+
+const CARD_SELECTOR = CARD_SELECTORS.join(",");
+
+const COMMENT_SELECTOR = [
+  "ytd-comments",
+  "ytd-comment-thread-renderer",
+  "ytd-comment-renderer",
+  "ytd-comment-view-model"
 ].join(",");
 
 const WATCH_PROGRESS_SELECTOR = [
@@ -51,9 +60,15 @@ export class YouTubeCardAdapter {
   }
 
   findCardContainer(anchor: HTMLAnchorElement): HTMLElement | null {
-    const container = anchor.closest(CARD_SELECTOR);
-    if (container instanceof HTMLElement) {
-      return container;
+    // YouTube sometimes nests a new `yt-lockup-view-model` inside the actual
+    // grid item. Hiding only that inner model leaves the outer grid slot in
+    // place and creates large holes in the feed. Prefer the page-level card
+    // container, falling back to the lockup only when it stands alone.
+    for (const selector of CARD_SELECTORS) {
+      const container = anchor.closest(selector);
+      if (container instanceof HTMLElement) {
+        return container;
+      }
     }
 
     return null;
@@ -81,6 +96,10 @@ export class YouTubeCardAdapter {
 
   #isExcluded(anchor: HTMLAnchorElement): boolean {
     const href = anchor.getAttribute("href") ?? "";
-    return href.includes("/playlist?") || href.includes("/shorts/");
+    return Boolean(
+      anchor.closest(COMMENT_SELECTOR) ||
+      href.includes("/playlist?") ||
+      href.includes("/shorts/")
+    );
   }
 }

@@ -52,6 +52,25 @@ describe("RecommendationCardFilter", () => {
     expect(card?.getAttribute("data-rec-leash-state")).toBe("badge");
   });
 
+  it("mutates the outer grid item when YouTube nests a lockup view model", async () => {
+    document.body.innerHTML = `
+      <ytd-rich-item-renderer id="grid-item">
+        <div id="content">
+          <yt-lockup-view-model id="lockup">
+            <a href="/watch?v=abc_DEF-123">Video</a>
+          </yt-lockup-view-model>
+        </div>
+      </ytd-rich-item-renderer>
+    `;
+
+    const filter = new RecommendationCardFilter(store, { displayMode: "hide" }, new YouTubeCardAdapter());
+    filter.enqueue(document.body);
+    await filter.flush();
+
+    expect(document.querySelector("#grid-item")?.classList.contains("rec-leash-hide")).toBe(true);
+    expect(document.querySelector("#lockup")?.classList.contains("rec-leash-hide")).toBe(false);
+  });
+
   it("ignores unrelated links", async () => {
     document.body.innerHTML = `
       <div id="card">
@@ -66,11 +85,13 @@ describe("RecommendationCardFilter", () => {
     expect(document.querySelector(".rec-leash-badge")).toBeNull();
   });
 
-  it("does not attach badges to watch links in expanded comments", async () => {
+  it("does not attach badges to watch links in expanded or nested comments", async () => {
     document.body.innerHTML = `
       <ytd-comment-thread-renderer id="comment">
         <div id="content-text">
-          Try <a href="/watch?v=abc_DEF-123">this watched video</a>
+          <yt-lockup-view-model id="comment-lockup">
+            Try <a href="/watch?v=abc_DEF-123">this watched video</a>
+          </yt-lockup-view-model>
         </div>
       </ytd-comment-thread-renderer>
     `;
@@ -80,6 +101,7 @@ describe("RecommendationCardFilter", () => {
     await filter.flush();
 
     expect(document.querySelector("#comment .rec-leash-badge")).toBeNull();
+    expect(document.querySelector("#comment-lockup")?.hasAttribute("data-rec-leash-state")).toBe(false);
     expect(document.querySelector("#content-text")?.hasAttribute("data-rec-leash-state")).toBe(false);
   });
 

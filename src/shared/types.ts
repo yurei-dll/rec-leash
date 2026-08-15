@@ -16,6 +16,7 @@ export type WatchStatusSource = "playtime" | "playtime-or-card-progress";
 export interface ExtensionSettings {
   displayMode: DisplayMode;
   watchStatusSource: WatchStatusSource;
+  showUnwatchedChip: boolean;
   debugLogging: boolean;
 }
 

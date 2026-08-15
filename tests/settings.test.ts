@@ -5,6 +5,7 @@ describe("settings", () => {
   it("defaults to badge-and-dim mode with quiet logging", () => {
     expect(normalizeSettings({}).displayMode).toBe("dim");
     expect(normalizeSettings({}).watchStatusSource).toBe("playtime");
+    expect(normalizeSettings({}).showUnwatchedChip).toBe(false);
     expect(normalizeSettings({}).debugLogging).toBe(false);
   });
 
@@ -31,12 +32,14 @@ describe("settings", () => {
     await saveSettings({
       displayMode: "dim",
       watchStatusSource: "playtime-or-card-progress",
+      showUnwatchedChip: true,
       debugLogging: false
     });
 
     expect(await getSettings()).toEqual({
       displayMode: "dim",
       watchStatusSource: "playtime-or-card-progress",
+      showUnwatchedChip: true,
       debugLogging: false
     });
 
@@ -44,6 +47,7 @@ describe("settings", () => {
     expect(await getSettings()).toEqual({
       displayMode: "hide",
       watchStatusSource: "playtime-or-card-progress",
+      showUnwatchedChip: true,
       debugLogging: false
     });
   });

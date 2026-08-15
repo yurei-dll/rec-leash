@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "rec-leash",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Locally records watched YouTube videos and marks watched recommendations when they reappear.",
   "permissions": [
     "storage"
