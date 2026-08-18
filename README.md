@@ -1,5 +1,8 @@
 # rec-leash
 
+[![Release workflow](https://github.com/yurei-dll/rec-leash/actions/workflows/release.yml/badge.svg)](https://github.com/yurei-dll/rec-leash/actions/workflows/release.yml)
+[![Mozilla Add-ons version](https://img.shields.io/amo/v/rec-leash?label=Mozilla%20Add-ons)](https://addons.mozilla.org/firefox/addon/rec-leash/)
+
 rec-leash is a Firefox-first WebExtension that keeps a local history of watched YouTube video IDs and marks watched videos when they reappear in YouTube recommendations, search results, or feed-like pages.
 
 The MVP is intentionally local-first and diagnostic-first: watched recommendation cards receive a `WATCHED` badge and are dimmed by default. You can switch to badge-only, hiding, or disabling the card treatment from the options page.
@@ -106,7 +109,13 @@ npm run build
 npm run package:firefox
 ```
 
-The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`. The Firefox packaging command rebuilds the extension and creates an AMO-uploadable archive such as `web-ext-artifacts/rec-leash.firefox.0.1.0.zip`; the `.firefox.` marker keeps artifact names unambiguous if other browser packages are added later.
+The build typechecks with TypeScript and bundles the content script/options script with `esbuild` into `dist/` so Firefox can load the unpacked extension from `dist/manifest.json`. The Firefox packaging command rebuilds the extension and creates an AMO-uploadable archive such as `web-ext-artifacts/rec-leash.firefox.0.2.0.zip`; the `.firefox.` marker keeps artifact names unambiguous if other browser packages are added later.
+
+## Releases
+
+Pushing an annotated version tag such as `v0.3.0` runs the release workflow. The tag must exactly match the versions in `package.json` and `manifest.json`. After tests, build, packaging, and `web-ext lint` pass, the workflow creates a GitHub Release with the Firefox ZIP and submits the listed extension update to Mozilla Add-ons.
+
+Mozilla submission uses the repository environment secrets `AMO_JWT_ISSUER` and `AMO_JWT_SECRET`. A successful workflow submission means AMO accepted the upload; Mozilla review, signing, and publication may complete asynchronously. The Mozilla Add-ons badge above reports the version that is actually public on AMO.
 
 ## Known Selector Fragility
 

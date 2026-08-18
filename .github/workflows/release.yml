@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, publish, and submit
+    runs-on: ubuntu-latest
+    environment: release
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify release versions
+        run: node scripts/check-release-version.mjs "${GITHUB_REF_NAME}"
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Firefox package
+        run: npm run package:firefox
+
+      - name: Lint Firefox package
+        run: npx web-ext lint --source-dir dist --no-input
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rec-leash-firefox-${{ github.ref_name }}
+          path: web-ext-artifacts/rec-leash.firefox.*.zip
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" web-ext-artifacts/rec-leash.firefox.*.zip --verify-tag --generate-notes
+
+      - name: Submit listed version to Mozilla Add-ons
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: >-
+          npx web-ext sign
+          --source-dir dist
+          --artifacts-dir web-ext-artifacts/amo
+          --channel listed
+          --approval-timeout 0
+          --no-input
+
+      - name: Write release summary
+        if: always()
+        run: |
+          {
+            echo "## rec-leash ${GITHUB_REF_NAME}"
+            echo
+            echo "- [GitHub Release](https://github.com/${GITHUB_REPOSITORY}/releases/tag/${GITHUB_REF_NAME})"
+            echo "- [Mozilla Add-ons listing](https://addons.mozilla.org/firefox/addon/rec-leash/)"
+            echo "- [Mozilla developer version status](https://addons.mozilla.org/developers/addon/rec-leash/versions)"
+            echo
+            echo "AMO submission success means Mozilla accepted the upload. Review, signing, and publication may finish later."
+          } >> "${GITHUB_STEP_SUMMARY}"
